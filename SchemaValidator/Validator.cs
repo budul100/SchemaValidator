@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Schema;
@@ -10,7 +9,7 @@ namespace SchemaValidator
     {
         #region Private Fields
 
-        private const string EnvelopeFile = @"Schemes\envelope.xsd";
+        private const string EnvelopeName = @"envelope";
 
         private readonly XmlReaderSettings settings;
 
@@ -25,15 +24,17 @@ namespace SchemaValidator
                 ValidationType = ValidationType.Schema
             };
 
-            var assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var assembly = this.GetType().GetTypeInfo().Assembly;
 
-            var envelopePath = Path.Combine(
-                    path1: assemblyFolder,
-                    path2: EnvelopeFile);
+            using (var schemaStream = assembly.GetManifestResourceStream("SchemaValidator.Schemes.envelope.xsd"))
+            {
+                var schema = XmlSchema.Read(
+                    stream: schemaStream,
+                    validationEventHandler: default);
 
-            settings.Schemas.Add(
-                targetNamespace: default,
-                schemaUri: envelopePath);
+                settings.Schemas.Add(
+                    schema: schema);
+            }
 
             if (!string.IsNullOrWhiteSpace(schemaPath))
             {
