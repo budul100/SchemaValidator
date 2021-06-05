@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<graphml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://graphml.graphdrawing.org/xmlns">
+  <graph edgedefault="directed" id="Network-1">
+    <node id="A">
+      <data key="Key-0">A</data>
+    </node>
+    <node id="BC">
+      <data key="Key-0">BC</data>
+      <graph edgedefault="directed" id="BC">
+        <data key="Key-1">BC</data>
+        <node id="B">
+          <data key="Key-2">False</data>
+          <data key="Key-0">B</data>
+        </node>
+        <node id="C">
+          <data key="Key-2">False</data>
+          <data key="Key-0">C</data>
+        </node>
+      </graph>
+    </node>
+    <edge id="Link-6" source="A" target="B" />
+    <edge id="Link-7" source="A" target="C" />
+    <edge id="Link-8" source="C" target="B" />
+  </graph>
+  <key for="node" attr.name="Abbreviation" attr.type="string" id="Key-0" />
+  <key for="graph" attr.name="Abbreviation" attr.type="string" id="Key-1" />
+  <key for="node" attr.name="IsImportant" attr.type="boolean" id="Key-2" />
+  <key for="graph" attr.name="IsImportant" attr.type="boolean" id="Key-3" />
+</graphml>

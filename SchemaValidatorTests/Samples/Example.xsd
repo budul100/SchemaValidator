@@ -1,0 +1,52 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://graphml.graphdrawing.org/xmlns" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="graphml" type="xn:graphmlType" xmlns:xn="http://graphml.graphdrawing.org/xmlns"/>
+  <xs:complexType name="dataType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="key" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="graphType">
+    <xs:sequence>
+      <xs:element type="xn:dataType" name="data" minOccurs="0" xmlns:xn="http://graphml.graphdrawing.org/xmlns"/>
+      <xs:element type="xn:nodeType" name="node" maxOccurs="unbounded" minOccurs="1" xmlns:xn="http://graphml.graphdrawing.org/xmlns"/>
+      <xs:element type="xn:edgeType" name="edge" maxOccurs="unbounded" minOccurs="0" xmlns:xn="http://graphml.graphdrawing.org/xmlns"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="edgedefault" use="optional"/>
+    <xs:attribute type="xs:string" name="id" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="nodeType">
+    <xs:sequence>
+      <xs:element type="xn:dataType" name="data" maxOccurs="unbounded" minOccurs="0" xmlns:xn="http://graphml.graphdrawing.org/xmlns"/>
+      <xs:element type="xn:graphType" name="graph" minOccurs="0" xmlns:xn="http://graphml.graphdrawing.org/xmlns"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="id" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="edgeType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="id" use="optional"/>
+        <xs:attribute type="xs:string" name="source" use="optional"/>
+        <xs:attribute type="xs:string" name="target" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="keyType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="for" use="optional"/>
+        <xs:attribute type="xs:string" name="attr.name" use="optional"/>
+        <xs:attribute type="xs:string" name="attr.type" use="optional"/>
+        <xs:attribute type="xs:string" name="id" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="graphmlType">
+    <xs:sequence>
+      <xs:element type="xn:graphType" name="graph" xmlns:xn="http://graphml.graphdrawing.org/xmlns"/>
+      <xs:element type="xn:keyType" name="key" maxOccurs="unbounded" minOccurs="0" xmlns:xn="http://graphml.graphdrawing.org/xmlns"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+
