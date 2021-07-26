@@ -1,4 +1,4 @@
-﻿using System;
+﻿using SchemaValidator.Exceptions;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Schema;
@@ -8,8 +8,6 @@ namespace SchemaValidator
     public class Validator
     {
         #region Private Fields
-
-        private const string EnvelopeName = @"envelope";
 
         private readonly XmlReaderSettings settings;
 
@@ -46,8 +44,6 @@ namespace SchemaValidator
             settings.ValidationFlags |= XmlSchemaValidationFlags.ProcessInlineSchema;
             settings.ValidationFlags |= XmlSchemaValidationFlags.ProcessSchemaLocation;
             settings.ValidationFlags |= XmlSchemaValidationFlags.ReportValidationWarnings;
-
-            settings.ValidationEventHandler += new ValidationEventHandler(ValidationCallBack);
         }
 
         #endregion Public Constructors
@@ -56,6 +52,8 @@ namespace SchemaValidator
 
         public void Validate(string xmlPath)
         {
+            settings.ValidationEventHandler += new ValidationEventHandler((s, a) => ValidationCallBack(a, xmlPath));
+
             var reader = XmlReader.Create(
                 inputUri: xmlPath,
                 settings: settings);
@@ -67,16 +65,11 @@ namespace SchemaValidator
 
         #region Private Methods
 
-        private static void ValidationCallBack(object sender, ValidationEventArgs args)
+        private static void ValidationCallBack(ValidationEventArgs args, string xmlPath)
         {
-            if (args.Severity == XmlSeverityType.Warning)
-            {
-                throw new Exception($"Validation scheme not found: {args.Message}.");
-            }
-            else
-            {
-                throw new Exception($"Validation error: {args.Message}.");
-            }
+            throw new ValidationException(
+                args: args,
+                xmlPath: xmlPath);
         }
 
         #endregion Private Methods
