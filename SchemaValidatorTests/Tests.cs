@@ -1,5 +1,5 @@
 using SchemaValidator;
-using System;
+using SchemaValidator.Exceptions;
 using System.IO;
 using System.Reflection;
 using Xunit;
@@ -25,7 +25,7 @@ namespace SchemaValidatorTests
 
             var xmlPath = GetPath("Example_negative.graphml");
 
-            Assert.Throws<Exception>(() => validator.Validate(xmlPath));
+            Assert.Throws<ValidationException>(() => validator.Validate(xmlPath));
         }
 
         [Fact]
