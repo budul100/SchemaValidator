@@ -28,7 +28,8 @@ namespace SchemaValidator
         {
             settings = new XmlReaderSettings
             {
-                ValidationType = ValidationType.Schema
+                ValidationType = ValidationType.Schema,
+                DtdProcessing = DtdProcessing.Ignore,
             };
 
             var assembly = this.GetType().GetTypeInfo().Assembly;
