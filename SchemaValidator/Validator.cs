@@ -1,7 +1,10 @@
-﻿using SchemaValidator.Exceptions;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Schema;
+using SchemaValidator.Exceptions;
 
 namespace SchemaValidator
 {
@@ -9,13 +12,19 @@ namespace SchemaValidator
     {
         #region Private Fields
 
+        private const string SchemaExtension = "*.xsd";
+
         private readonly XmlReaderSettings settings;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public Validator(string schemaPath = default)
+        public Validator(string schemaDirectory)
+            : this(GetSchemaPaths(schemaDirectory))
+        { }
+
+        public Validator(IEnumerable<string> schemaPaths = default)
         {
             settings = new XmlReaderSettings
             {
@@ -34,11 +43,17 @@ namespace SchemaValidator
                     schema: schema);
             }
 
-            if (!string.IsNullOrWhiteSpace(schemaPath))
+            var relevantPaths = schemaPaths?
+                .Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+
+            if (relevantPaths?.Any() == true)
             {
-                settings.Schemas.Add(
-                    targetNamespace: default,
-                    schemaUri: schemaPath);
+                foreach (var relevantPath in relevantPaths)
+                {
+                    settings.Schemas.Add(
+                        targetNamespace: default,
+                        schemaUri: relevantPath);
+                }
             }
 
             settings.ValidationFlags |= XmlSchemaValidationFlags.ProcessInlineSchema;
@@ -64,6 +79,20 @@ namespace SchemaValidator
         #endregion Public Methods
 
         #region Private Methods
+
+        private static IEnumerable<string> GetSchemaPaths(string schemaDirectory)
+        {
+            var result = default(IEnumerable<string>);
+
+            if (Directory.Exists(schemaDirectory))
+            {
+                result = Directory.GetFiles(
+                    path: schemaDirectory,
+                    searchPattern: SchemaExtension);
+            }
+
+            return result;
+        }
 
         private static void ValidationCallBack(ValidationEventArgs args, string xmlPath)
         {
