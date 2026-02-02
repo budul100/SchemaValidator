@@ -12,6 +12,7 @@ namespace SchemaValidator
     {
         #region Private Fields
 
+        private const string EnvelopeSchema = "SchemaValidator.Schemes.envelope.xsd";
         private const string SchemaExtension = "*.xsd";
 
         private readonly XmlReaderSettings settings;
@@ -34,8 +35,15 @@ namespace SchemaValidator
 
             var assembly = this.GetType().GetTypeInfo().Assembly;
 
-            using (var schemaStream = assembly.GetManifestResourceStream("SchemaValidator.Schemes.envelope.xsd"))
+            using (var schemaStream = assembly.GetManifestResourceStream(EnvelopeSchema))
             {
+                if (schemaStream == null)
+                {
+                    throw new FileNotFoundException(
+                        $"The embedded resource '{EnvelopeSchema}' was not found. " +
+                        "Ensure the file is marked as 'Embedded Resource' in the project.");
+                }
+
                 var schema = XmlSchema.Read(
                     stream: schemaStream,
                     validationEventHandler: default);
