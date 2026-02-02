@@ -20,11 +20,11 @@ namespace SchemaValidator
 
         #region Public Constructors
 
-        public Validator(string schemaDirectory)
-            : this(GetSchemaPaths(schemaDirectory))
+        public Validator(string schemaPath)
+            : this(GetSchemaFiles(schemaPath))
         { }
 
-        public Validator(IEnumerable<string> schemaPaths = default)
+        public Validator(IEnumerable<string> schemaFiles = default)
         {
             settings = new XmlReaderSettings
             {
@@ -44,16 +44,16 @@ namespace SchemaValidator
                     schema: schema);
             }
 
-            var relevantPaths = schemaPaths?
+            var relevantFiles = schemaFiles?
                 .Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
 
-            if (relevantPaths?.Any() == true)
+            if (relevantFiles?.Any() == true)
             {
-                foreach (var relevantPath in relevantPaths)
+                foreach (var relevantFile in relevantFiles)
                 {
                     settings.Schemas.Add(
                         targetNamespace: default,
-                        schemaUri: relevantPath);
+                        schemaUri: relevantFile);
                 }
             }
 
@@ -81,15 +81,28 @@ namespace SchemaValidator
 
         #region Private Methods
 
-        private static IEnumerable<string> GetSchemaPaths(string schemaDirectory)
+        private static IEnumerable<string> GetSchemaFiles(string schemaPath)
         {
             var result = default(IEnumerable<string>);
 
-            if (Directory.Exists(schemaDirectory))
+            if (!string.IsNullOrWhiteSpace(schemaPath))
             {
-                result = Directory.GetFiles(
-                    path: schemaDirectory,
-                    searchPattern: SchemaExtension);
+                if (Directory.Exists(schemaPath))
+                {
+                    result = Directory.GetFiles(
+                        path: schemaPath,
+                        searchPattern: SchemaExtension);
+                }
+                else if (File.Exists(schemaPath))
+                {
+                    result = new[] { schemaPath };
+                }
+
+                if (result == default)
+                {
+                    throw new DirectoryNotFoundException(
+                        message: $"There are no schema files at '{schemaPath}'.");
+                }
             }
 
             return result;

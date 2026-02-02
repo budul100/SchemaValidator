@@ -10,8 +10,9 @@ namespace SchemaValidatorTests
     {
         #region Private Fields
 
-        private const string PathSamplesGraphML = @"..\..\..\Samples\GraphML\";
-        private const string PathSamplesRailML = @"..\..\..\Samples\railML\";
+        private const string GraphMLSamples = @"..\..\..\Samples\GraphML\";
+        private const string GraphMLSchema = @"Example.xsd";
+        private const string RailMLSamples = @"..\..\..\Samples\railML\";
 
         #endregion Private Fields
 
@@ -20,13 +21,29 @@ namespace SchemaValidatorTests
         [Fact]
         public void TestFromDirectory()
         {
-            var schemaPath = GetPath(PathSamplesRailML);
+            var schemaPath = GetPath(RailMLSamples);
 
             var validator = new Validator(schemaPath);
 
             var xmlPath = GetPath(
-                folder: PathSamplesRailML,
+                folder: RailMLSamples,
                 file: "_Example.railML");
+
+            Assert.Throws<ValidationException>(() => validator.Validate(xmlPath));
+        }
+
+        [Fact]
+        public void TestFromFile()
+        {
+            var schemaPath = GetPath(
+                folder: GraphMLSamples,
+                file: GraphMLSchema);
+
+            var validator = new Validator(schemaPath);
+
+            var xmlPath = GetPath(
+                folder: GraphMLSamples,
+                file: "Example_negative.graphml");
 
             Assert.Throws<ValidationException>(() => validator.Validate(xmlPath));
         }
@@ -35,13 +52,13 @@ namespace SchemaValidatorTests
         public void TestNegative()
         {
             var schemaPath = GetPath(
-                folder: PathSamplesGraphML,
+                folder: GraphMLSamples,
                 file: "Example.xsd");
 
             var validator = new Validator([schemaPath]);
 
             var xmlPath = GetPath(
-                folder: PathSamplesGraphML,
+                folder: GraphMLSamples,
                 file: "Example_negative.graphml");
 
             Assert.Throws<ValidationException>(() => validator.Validate(xmlPath));
@@ -51,13 +68,13 @@ namespace SchemaValidatorTests
         public void TestPositive()
         {
             var schemaPath = GetPath(
-                folder: PathSamplesGraphML,
+                folder: GraphMLSamples,
                 file: "Example.xsd");
 
             var validator = new Validator([schemaPath]);
 
             var xmlPath = GetPath(
-                folder: PathSamplesGraphML,
+                folder: GraphMLSamples,
                 file: "Example_positive.graphml");
 
             validator.Validate(xmlPath);
