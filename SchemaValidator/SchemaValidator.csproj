@@ -1,31 +1,42 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
 	<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
+		<TargetFrameworks>netstandard2.0;netstandard2.1;net7.0;net8.0</TargetFrameworks>
+		<AssemblyName>SchemaValidator</AssemblyName>
+		<Version>1.4.1</Version>
+		<FileVersion>$(Version)</FileVersion>
+		<AssemblyVersion>$(Version)</AssemblyVersion>
 		<Authors>budul</Authors>
-		<Company>budul</Company>
 		<Description>Validate xml files against a schema</Description>
-		<AssemblyVersion>1.4.0</AssemblyVersion>
-		<FileVersion>$(AssemblyVersion)</FileVersion>
-		<Version>$(AssemblyVersion)</Version>
+		<RepositoryUrl>https://github.com/budul100/SchemaValidator</RepositoryUrl>
+
+		<PackageId>budul.SchemaValidator</PackageId>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageTags>XSD, Schema validation</PackageTags>
+		<PackageProjectUrl>https://www.nuget.org/packages/budul.SchemaValidator</PackageProjectUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+
+		<DebugType>portable</DebugType>
+		<OutputType>Library</OutputType>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+
+		<!-- No package by default-->
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+	</PropertyGroup>
+
+	<!-- Package for release only -->
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<PackageId>budul.SchemaValidator</PackageId>
-		<RepositoryUrl>https://github.com/budul100/SchemaValidator</RepositoryUrl>
 	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-		<ShouldCreateLogs>True</ShouldCreateLogs>
-		<AdvancedSettingsExpanded>False</AdvancedSettingsExpanded>
-		<UpdateAssemblyVersion>True</UpdateAssemblyVersion>
-		<UpdateAssemblyFileVersion>False</UpdateAssemblyFileVersion>
-		<UpdateAssemblyInfoVersion>False</UpdateAssemblyInfoVersion>
-		<AssemblyVersionSettings>None.IncrementOnDemand.NoneWithAutoReset.NoneWithAutoReset</AssemblyVersionSettings>
-		<UpdatePackageVersion>False</UpdatePackageVersion>
-		<AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
-		<InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
-	</PropertyGroup>
-
+	
+	<ItemGroup>
+		<None Include="../README.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
+	
 	<ItemGroup>
 	  <None Remove="Schemes\envelope.xsd" />
 	</ItemGroup>
